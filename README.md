@@ -35,15 +35,15 @@ AI 幫你很快就做出一個「跑得動」的 MVP。但「在我電腦上、1
 
 **4. 分級按「痛什麼時候來」，不按抽象嚴重度。**
 
-- 🔴 **已經在發生** —— 數字已經越線
+- 🔴 **已經在發生** —— 數字已經越線，或程式碼本身就能證明現在正在發生
 - 🟠 **觀察期內會踩到** —— 現在沒事，但在你真正在意的時間範圍內會爆
 - 🟡 **慢燒** —— 沒有上限，但短期活得下去
 
-同一個寫法，資料 100 筆時是 🟡，長到一定量就變 🔴。**等級取決於你現在的資料量，不是程式碼本身**——這也是為什麼「先量」是前提。
+同一個寫法，資料 100 筆時是 🟡，長到一定量就變 🔴。**等級看的是問題什麼時候會真的影響系統**，不是寫法看起來危不危險——這也是為什麼「先量」是前提。要等外部出狀況才發作、時間估不出來的，放 🟠 並標「條件觸發・時間未定」。
 
 **5. 也會列「檢查過、沒問題的」。** 只報壞消息會讓人去「修」本來就安全的東西，那是另一種製造脆弱的方式。
 
-**6. 修法要留下可重跑的驗證。** 每個修法附一個腳本或測試，直接斷言它修好的那個數字（回傳幾列、payload 幾 KB、cache 上限幾筆）。只用少量假資料檢查「結果對不對」的測試，100 筆和 10 萬筆時都會過，抓不到這類問題。
+**6. 修法要留下可重跑的驗證。** 每個修法附一個可重跑的檢查和通過條件：有數字就斷言數字（回傳幾列、payload 幾 KB、cache 上限幾筆），沒有數字就斷言看得到的行為（上游卡住時工作會結束、同一批跑兩次只有一份結果）。體檢時只寫出檢查方法，你同意修了才真的寫。只用少量假資料檢查「結果對不對」的測試，100 筆和 10 萬筆時都會過，抓不到這類問題。
 
 ## 兩種模式
 
@@ -72,7 +72,7 @@ ship-check 是上線前的體檢。更便宜的做法是讓 AI 在寫的當下�
 - 排程工作要有重疊保護：上一輪還沒跑完就跳過。
 ```
 
-內建 `/code-review` 在 medium 以上會拿改動對照 `CLAUDE.md` 裡的明文規則，所以寫進去之後，違反的改動會被點出來。
+內建 `/code-review` 在 medium 以上會拿改動對照 `CLAUDE.md` 裡的明文規則（以撰寫時的 Claude Code 2.1 版為準，之後可能改變），所以寫進去之後，違反的改動有機會被點出來。
 
 規則管得到寫法，管不到資料長大之後的實際數字，所以上線前還是要跑 ship-check。
 
@@ -123,4 +123,4 @@ cp -r ship-check .claude/skills/ship-check
 
 ---
 
-**English:** `ship-check` is a Claude Code skill that runs a **pre-production sustainability audit** — the "will this still run in 3 months as the data grows?" layer that a fast AI-built MVP usually skips. It measures real numbers before diagnosing (no finding without a number), audits 7 growth-over-time dimensions (data growth & retention, computation push-down, memory & cache safety, concurrency, payload size, frontend fetching, honest UI state), and ranks findings by *when the pain lands* rather than abstract severity. It deliberately does **not** hunt line-level correctness bugs — that's what `/code-review` is for, and every audit ends by handing off to it. Drop the folder into `~/.claude/skills/` to install.
+**English:** `ship-check` is a Claude Code skill that runs a **pre-production sustainability audit** — the "will this still run in 3 months as the data grows?" layer that a fast AI-built MVP usually skips. It measures real numbers before diagnosing (no finding without a number, unless the code alone proves the defect), audits 7 growth-over-time dimensions (data growth & retention, computation push-down, memory & cache safety, concurrency, payload size, frontend fetching, honest UI state), and ranks findings by *when the pain lands* rather than abstract severity. It deliberately does **not** hunt line-level correctness bugs — that's what `/code-review` is for, and every audit ends by handing off to it. Drop the folder into `~/.claude/skills/` to install.
