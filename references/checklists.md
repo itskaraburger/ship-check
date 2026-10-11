@@ -12,7 +12,7 @@
 - [ ] 它讀的表有出場機制嗎？（append-only 要 retention；「只 upsert 不刪」的狀態表，過期的列會不會永遠留著、還被算進結果；刻意永久保存且說得出理由也算有答案）
 - [ ] filter / sort / top-N / 聚合 / 去重 —— 全下推 DB 了嗎？
 - [ ] 只 SELECT 用得到的欄？（沒有 `SELECT *` 拖大 JSON/長文字欄）
-- [ ] 如果加了 cache（上一條的下推做完才加）：TTL / Eviction / Cap / Key 空間有界 —— 四問都答得出來嗎？
+- [ ] 如果加了 cache（上面的下推做完才加）：TTL / Eviction / Cap / Key 空間有界 —— 四問都答得出來嗎？
 - [ ] cache 真的會命中嗎？（該共用結果的請求，算出來的 key 一樣嗎？key 裡有現在時間、亂數就幾乎不會命中；使用者衍生的 key 會不會把固定的熱 key 擠出同一個上限）
 - [ ] 貴重計算有 in-flight 去重嗎？（50 個同時 miss 不會重算 50 次）
 - [ ] 請求當下會打外部服務嗎？有 timeout，而且逾時真的中斷連線？尖峰時的呼叫量在對方的 rate limit 內嗎？
